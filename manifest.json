@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Word Cloud Generator",
+  "version": "1.0.0",
+  "description": "Generate a beautiful word cloud from any webpage",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{587313d1-c708-4280-b2fb-b8dd96eae2cd}"
+    }
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/icon_small.png",
+      "128": "icons/icon_large.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon_small.png",
+    "128": "icons/icon_large.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

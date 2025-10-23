@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Cloud Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="container">
+    <div id="initial-state">
+      <div class="header">
+        <h1 class="title">Word Cloud Generator</h1>
+        <button id="settings-btn" class="icon-btn" title="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="12" cy="5" r="1"></circle>
+            <circle cx="12" cy="19" r="1"></circle>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="ai-prompt-container" class="hidden">
+        <textarea 
+          id="ai-prompt" 
+          placeholder="Describe what words to focus on (optional)..." 
+          maxlength="250" 
+          rows="3"
+        ></textarea>
+        <div class="char-counter">
+          <span id="char-count">0</span> / 250
+        </div>
+      </div>
+      
+      <button id="generate-btn">Generate Word Cloud</button>
+    </div>
+    
+    <!-- Settings Screen -->
+    <div id="settings-state" class="hidden">
+      <div class="header">
+        <button id="back-to-main-btn" class="icon-btn" title="Back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <h1 class="title">Settings</h1>
+        <div class="icon-btn" style="visibility: hidden;"></div>
+      </div>
+      
+      <div class="settings-content">
+        <div class="setting-item">
+          <div class="slider-header">
+            <label for="word-limit">Max Words:</label>
+            <input type="number" id="word-limit-input" min="1" max="2000" value="300" step="1">
+          </div>
+          <input type="range" id="word-limit" min="1" max="2000" value="300" step="1">
+        </div>
+        
+        <div class="setting-item">
+          <div class="toggle-row">
+            <label class="toggle-label">
+              <input type="checkbox" id="ai-filter-toggle" class="toggle-input">
+              <span class="toggle-text">AI Filter</span>
+              <span class="toggle-switch"></span>
+            </label>
+            <div class="info-icon-container">
+              <span class="info-icon" data-tooltip="ai-filter-tooltip">?</span>
+              <div class="tooltip" id="ai-filter-tooltip">
+                <button class="tooltip-close">×</button>
+                Enable AI-powered filtering to focus on specific types of words. Enter a prompt like "only food-related words" or "words about emotions".
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="api-key-status" class="hidden">
+          <span class="api-key-saved">✓ API key saved</span>
+          <button id="edit-api-key-btn" class="text-btn">Change API Key</button>
+        </div>
+        
+        <div id="api-key-container" class="hidden">
+          <label for="api-key-input" class="api-key-label">
+            OpenAI API Key
+            <div class="info-icon-container inline">
+              <span class="info-icon small" data-tooltip="api-key-tooltip">?</span>
+              <div class="tooltip" id="api-key-tooltip">
+                <button class="tooltip-close">×</button>
+                Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>. New users get $5 free credit (~3,300 word clouds).
+              </div>
+            </div>
+          </label>
+          <div class="input-wrapper">
+            <input type="password" id="api-key-input" placeholder="sk-..." maxlength="200">
+            <div id="api-key-error" class="error-message hidden"></div>
+            <button id="save-api-key-btn" class="small-btn">Save & Validate</button>
+          </div>
+        </div>
+        
+        <a href="https://www.buymeacoffee.com/placeholder" target="_blank" class="coffee-link">☕ Buy Me a Coffee</a>
+      </div>
+    </div>
+    <div id="loading-state" class="hidden">
+      <div class="spinner"></div>
+      <p>Generating word cloud...</p>
+    </div>
+    <div id="word-cloud-container" class="hidden">
+      <svg id="word-cloud"></svg>
+      <div id="stats"></div>
+      <button id="back-btn" title="Back to settings">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <button id="download-btn" title="Download as PNG">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </button>
+    </div>
+    <div id="error-state" class="hidden">
+      <p id="error-message"></p>
+      <button id="retry-btn">Try Again</button>
+    </div>
+  </div>
+
+  <script src="d3.v7.min.js"></script>
+  <script src="d3.layout.cloud.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

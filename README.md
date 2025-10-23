@@ -45,15 +45,15 @@ A Chrome extension that analyzes webpage content and generates dynamic word clou
 See the power of AI-driven semantic filtering:
 
 ### Standard Word Cloud (No Filter)
-![Standard Word Cloud](screenshots/standard.png)
+<img width="1020" height="660" alt="image" src="https://github.com/user-attachments/assets/a80cdeb2-dc05-42a0-833e-67277b55c81d" />
 *All words from the page analyzed by frequency*
 
 ### AI Filtered: "only nouns"
-![Nouns Only](screenshots/nouns.png)
+<img width="1020" height="660" alt="image" src="https://github.com/user-attachments/assets/42bdcff6-30dc-48bf-b236-6233ea565ff5" />
 *Intelligent extraction of noun-based concepts*
 
 ### AI Filtered: "words starting with L"
-![L Words Only](screenshots/l_words.png)
+<img width="964" height="624" alt="image" src="https://github.com/user-attachments/assets/3a0fbd37-47e7-4f71-a451-3f0ea6e85c99" />
 *Precise pattern-based filtering*
 
 > **Note:** AI filtering uses your OpenAI API key. New users get $5 free credit (~3,300 word clouds).
